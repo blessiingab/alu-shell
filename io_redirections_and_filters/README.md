@@ -1,1 +1,1 @@
-this script describes this directory
+this script describes the drectory
