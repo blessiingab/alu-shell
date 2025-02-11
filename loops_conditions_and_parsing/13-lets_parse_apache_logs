@@ -1,1 +1,5 @@
 #!/usr/bin/env bash
+# Path to the Apache log file
+log_file="/path/to/apache-access.log"
+# Use awk to extract and display IP and HTTP status code
+awk '{print $1, $9}' "$log_file"
