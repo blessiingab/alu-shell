@@ -3,6 +3,6 @@
 # - Username
 # - Group ID (GID)
 # - Shell full path
-while IFS=: read -r username password uid gid info home shell; do
+while IFS=: read -r username password uid gid info home shell ; do
     echo "$username:$gid:$shell"
 done < /etc/passwd
