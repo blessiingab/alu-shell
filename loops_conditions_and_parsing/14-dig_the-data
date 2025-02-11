@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Path to the Apache log file
+log_file="/path/to/apache-access.log"
+# Use awk to extract IP and HTTP status, then sort and count occurrences
+awk '{print $1, $9}' "$log_file" | 
+    sort | 
+    uniq -c | 
+    sort -nr | 
+    awk '{print $1, $2, $3}'
