@@ -1,7 +1,20 @@
 #!/usr/bin/env bash
-# this scripts indefinetely writes to a file and pauses for 2 seconds
-
-while true; do
-    echo "I am alive!" >> /tmp/my_process
-    sleep 2
-done
+# The init script manages another process. It can start, stop, or restart the process, and displays messages and creates/deletes a PID file.
+if [ "$1" == "start" ]; then
+    ./manage_my_process &
+    echo "$!" > /var/run/my_process.pid
+    echo "manage_my_process started"
+elif [ "$1" == "stop" ]; then
+    pid=$(cat /var/run/my_process.pid)
+    kill "$pid"
+    rm /var/run/my_process.pid
+    echo "manage_my_process stopped"
+elif [ "$1" == "restart" ]; then 
+    pid=$(cat /var/run/my_process.pid)
+    kill "$pid"
+    ./manage_my_process &
+    echo "$!" > /var/run/my_process.pid
+    echo "manage_my_process restarted"
+else
+    echo "Usage: manage_my_process {start|stop|restart}"
+fi
