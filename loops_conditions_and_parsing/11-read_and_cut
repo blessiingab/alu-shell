@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
-
 # This script displays only the following fields from /etc/passwd:
 # - Username
 # - Group ID (GID)
 # - Shell full path
-
 while IFS=: read -r username password uid gid info home shell; do
     echo "$username:$gid:$shell"
 done < /etc/passwd
-
