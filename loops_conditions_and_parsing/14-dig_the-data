@@ -1,9 +1,4 @@
 #!/usr/bin/env bash
-# Path to the Apache log file
-log_file="/path/to/apache-access.log"
-# Use awk to extract IP and HTTP status, then sort and count occurrences
-awk '{print $1, $9}' "$log_file" | 
-    sort | 
-    uniq -c | 
-    sort -nr | 
-    awk '{print $1, $2, $3}'
+# The Bash script uses awk to parse the Apache log file. It extracts visitor IP and 
+# HTTP status code, printing them in a list format.
+awk '{print $1,$9}' apache-access.log | sort | uniq -c | sort -nr
