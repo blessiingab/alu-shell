@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # The init script manages another process. It can start, stop, or restart the process, and displays messages and creates/deletes a PID file.
-
 if [ "$1" == "start" ]; then
     ./manage_my_process &
     echo "$!" > /var/run/my_process.pid
