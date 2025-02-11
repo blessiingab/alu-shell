@@ -1,20 +1,51 @@
 #!/usr/bin/env bash
 # The init script manages another process. It can start, stop, or restart the process, and displays messages and creates/deletes a PID file.
-if [ "$1" == "start" ]; then
-    ./manage_my_process &
-    echo "$!" > /var/run/my_process.pid
-    echo "manage_my_process started"
-elif [ "$1" == "stop" ]; then
-    pid=$(cat /var/run/my_process.pid)
-    kill "$pid"
-    rm /var/run/my_process.pid
-    echo "manage_my_process stopped"
-elif [ "$1" == "restart" ]; then 
-    pid=$(cat /var/run/my_process.pid)
-    kill "$pid"
-    ./manage_my_process &
-    echo "$!" > /var/run/my_process.pid
-    echo "manage_my_process restarted"
-else
-    echo "Usage: manage_my_process {start|stop|restart}"
-fi
+
+PID_FILE="/var/run/my_process.pid"
+PROCESS="./manage_my_process"
+
+case "$1" in
+    start)
+        if [[ -f "$PID_FILE" ]]; then
+            echo "manage_my_process is already running."
+        else
+            $PROCESS &  # Start the process in the background
+            echo "$!" > "$PID_FILE"  # Save its PID
+            echo "manage_my_process started"
+        fi
+        ;;
+    
+    stop)
+        if [[ -f "$PID_FILE" ]]; then
+            pid=$(cat "$PID_FILE")
+            if kill "$pid" 2>/dev/null; then
+                rm -f "$PID_FILE"
+                echo "manage_my_process stopped"
+            else
+                echo "Failed to stop process. It may not be running."
+            fi
+        else
+            echo "manage_my_process is not running."
+        fi
+        ;;
+    
+    restart)
+        if [[ -f "$PID_FILE" ]]; then
+            pid=$(cat "$PID_FILE")
+            if kill "$pid" 2>/dev/null; then
+                rm -f "$PID_FILE"
+                echo "manage_my_process stopped"
+            else
+                echo "Failed to stop process. It may not be running."
+            fi
+        fi
+        $PROCESS &  # Restart the process
+        echo "$!" > "$PID_FILE"
+        echo "manage_my_process restarted"
+        ;;
+    
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+        ;;
+esac
